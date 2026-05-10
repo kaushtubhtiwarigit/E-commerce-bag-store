@@ -91,7 +91,21 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true }
     } catch (error) {
-      const message = error.response?.data?.message || 'Login failed'
+      console.error('Login error:', error)
+      
+      let message = 'Something went wrong. Please try again later.'
+      
+      if (error.response) {
+        // Server responded with error
+        message = error.response.data?.message || message
+      } else if (error.request) {
+        // Request made but no response
+        message = 'Cannot connect to server. Please make sure the backend is running.'
+      } else {
+        // Something else happened
+        message = error.message || message
+      }
+      
       dispatch({ type: 'AUTH_ERROR', payload: message })
       return { success: false, message }
     }
@@ -107,7 +121,21 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true }
     } catch (error) {
-      const message = error.response?.data?.message || 'Registration failed'
+      console.error('Registration error:', error)
+      
+      let message = 'Something went wrong. Please try again later.'
+      
+      if (error.response) {
+        // Server responded with error
+        message = error.response.data?.message || message
+      } else if (error.request) {
+        // Request made but no response
+        message = 'Cannot connect to server. Please make sure the backend is running.'
+      } else {
+        // Something else happened
+        message = error.message || message
+      }
+      
       dispatch({ type: 'AUTH_ERROR', payload: message })
       return { success: false, message }
     }
