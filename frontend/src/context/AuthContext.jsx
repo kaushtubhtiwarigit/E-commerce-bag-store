@@ -49,8 +49,9 @@ export const AuthProvider = ({ children }) => {
     error: null
   })
 
-  // Set auth token in axios headers
+  // Set auth token in axios headers and enable credentials
   useEffect(() => {
+    axios.defaults.withCredentials = true
     if (state.token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${state.token}`
     } else {
