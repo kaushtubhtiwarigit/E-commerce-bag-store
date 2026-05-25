@@ -67,6 +67,8 @@ const registerUser = async (req, res) => {
     }
   } catch (error) {
     console.error('Registration error:', error);
+    console.error('Error stack:', error.stack);
+    console.error('Error name:', error.name);
     
     // Handle mongoose validation errors
     if (error.name === 'ValidationError') {
@@ -76,8 +78,16 @@ const registerUser = async (req, res) => {
       });
     }
     
+    // Handle duplicate key error
+    if (error.code === 11000) {
+      return res.status(400).json({ 
+        message: 'An account with this email already exists' 
+      });
+    }
+    
     res.status(500).json({ 
-      message: 'Something went wrong. Please try again later.' 
+      message: 'Something went wrong. Please try again later.',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 };
